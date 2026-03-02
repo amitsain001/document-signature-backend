@@ -1,0 +1,36 @@
+{
+  "name": "document-signature-backend",
+  "version": "1.0.0",
+  "description": "This repository contains all the backend tech stack code for this project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitsain001/document-signature-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/amitsain001/document-signature-backend/issues"
+  },
+  "homepage": "https://github.com/amitsain001/document-signature-backend#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.2.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^8.0.1",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
