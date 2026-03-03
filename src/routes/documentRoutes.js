@@ -8,6 +8,9 @@ const path = require("path");
 const { PDFDocument, rgb, StandardFonts } = require("pdf-lib");
 const DocumentModel = require("../models/Document");
 const SignatureModel = require("../models/Signature");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const Document = require("../models/Document");
 
 router.post("/upload", protect, upload.single("file"), uploadDocument);
 router.get("/my-docs", protect, getMyDocuments);
@@ -82,6 +85,63 @@ router.post("/:id/finalize", async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Error signing document" });
     }
+});
+
+router.post("/:id/request-signature", async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const document = await Document.findById(req.params.id);
+        if (!document) return res.status(404).json({ message: "Document not found" });
+
+        const token = crypto.randomBytes(32).toString("hex");
+
+        document.signatureToken = token;
+        document.tokenExpiresAt = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+        document.signerEmail = email;
+
+        await document.save();
+
+        const link = `http://localhost:5173/sign/${token}`;
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+            });
+
+            await transporter.sendMail({
+                from: `"Document Signature App" <${process.env.EMAIL_USER}>`,
+                to: email,
+                subject: "Please Sign This Document",
+                html: `
+                    <h2>Signature Request</h2>
+                    <p>You have been requested to sign a document.</p>
+                    <a href="${link}" target="_blank">Click Here to Sign</a>
+                    <p>This link expires in 1 hour.</p>
+                `,
+            });
+            
+        res.json({ message: "Signature link generated", link });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error generating link" });
+    }
+});
+
+router.get("/public/:token", async (req, res) => {
+    const document = await Document.findOne({
+        signatureToken: req.params.token,
+        tokenExpiresAt: { $gt: new Date() },
+    });
+
+    if (!document)
+        return res.status(404).json({ message: "Invalid or expired link" });
+
+    res.json(document);
 });
 
 module.exports = router;
