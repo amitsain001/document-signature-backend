@@ -9,7 +9,7 @@ const signatureRoutes = require("./routes/signatureRoutes");
 const app = express();
 
 app.use(cors({
-  origin: "*"
+  origin: "https://document-signature-app.netlify.app"
 }));
 app.use(express.json());
 
