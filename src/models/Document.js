@@ -6,14 +6,18 @@ const documentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        filePath: {
-            type: String,
-            required: true,
+
+        filePath: String,
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         },
+
         fileSize: {
             type: Number,
             required: true,
         },
+        
         uploadedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -27,6 +31,17 @@ const documentSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+
+        status: {
+            type: String,
+            enum: ["PENDING", "SIGNED", "REJECTED"],
+            default: "PENDING"
+        },
+
+        rejectionReason: {
+            type: String,
+            default: null
+        }
     },
     { timestamps: true }
 );

@@ -29,6 +29,14 @@ const signatureSchema = new mongoose.Schema(
       enum: ["Pending", "Signed"],
       default: "Pending",
     },
+    text: {
+        type: String,
+    },
+
+    font: {
+        type: String,
+    },
+
   },
   { timestamps: true }
 );

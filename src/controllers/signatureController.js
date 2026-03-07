@@ -3,7 +3,7 @@ const Signature = require("../models/Signature");
 // Save signature placeholder
 exports.createSignature = async (req, res) => {
   try {
-    const { documentId, pageNumber, x, y } = req.body;
+    const { documentId, pageNumber, x, y, text, font } = req.body;
 
     const signature = await Signature.create({
         documentId,
@@ -11,6 +11,8 @@ exports.createSignature = async (req, res) => {
         pageNumber,
         x,
         y,
+        text,
+        font,
     });
 
     res.status(201).json({
