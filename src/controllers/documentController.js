@@ -57,17 +57,17 @@ exports.getDocumentById = async (req, res) => {
 
 exports.getDocumentByToken = async (req, res) => {
     try {
-            const document = await Document.findOne({
-            signatureToken: req.params.token,
+          const document = await Document.findOne({
+          signatureToken: req.params.token,
         });
 
         if (!document) {
-            return res.status(404).json({ message: "Document not found" });
+          return res.status(404).json({ message: "Document not found" });
         }
 
         res.json(document);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
 };
 
